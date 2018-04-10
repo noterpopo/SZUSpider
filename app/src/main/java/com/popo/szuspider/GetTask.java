@@ -25,7 +25,7 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
 
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-            connection.setRequestProperty("Accept-Encoding","gzip, deflate, br");
+            connection.setRequestProperty("Accept-Encoding","deflate, br");
             connection.setRequestProperty("Accept-Language","zh-CN,zh;q=0.9,zh-TW;q=0.8");
             connection.setRequestProperty("Connection","keep-alive");
             connection.setRequestProperty("Host","authserver.szu.edu.cn");
@@ -51,16 +51,17 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
             }
             Log.d("hhh",sbResponseHeader.toString());
 
-            InputStreamReader inputStream =new InputStreamReader(connection.getInputStream());
+            InputStreamReader inputStream =new InputStreamReader(connection.getInputStream(),"UTF-8");
             BufferedReader reader=new BufferedReader(inputStream);
             String lines;
             stringBuffer=new StringBuffer("");
             while ((lines=reader.readLine())!=null){
                 lines=new String(lines.getBytes(),"utf-8");
-                Log.d("hhh",lines);
+                //Log.d("hhh",lines);
                 stringBuffer.append(lines);
             }
             reader.close();
+
             connection.disconnect();
 
 
@@ -72,6 +73,6 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
 
     @Override
     protected void onPostExecute(Void aVoid) {
-        //Log.d("hhh",stringBuffer.toString());
+        Log.d("hhh",stringBuffer.toString());
     }
 }
