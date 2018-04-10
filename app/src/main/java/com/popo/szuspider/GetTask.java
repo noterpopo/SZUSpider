@@ -178,7 +178,7 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
             connection.setRequestProperty("Cookie","CASTGC="+cookies.get("CASTGC")+"; route="+cookies.get("route")+"; JSESSIONID_auth="+cookies.get("JSESSIONID_auth")+"; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=zh_CN; insert_cookie="+cookies.get("insert_cookie"));
             connection.setRequestMethod("GET");
             connection.setRequestProperty("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
-            connection.setRequestProperty("Accept-Encoding","eflate, br");
+            connection.setRequestProperty("Accept-Encoding","deflate, br");
             connection.setRequestProperty("Accept-Language","zh-CN,zh;q=0.9,zh-TW;q=0.8");
             connection.setRequestProperty("Connection","keep-alive");
             connection.setRequestProperty("Host","authserver.szu.edu.cn");
@@ -203,12 +203,77 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
             Log.d("hhh",sbResponseHeader.toString());
             connection.disconnect();
 
+            //第五次请求
+            url=new URL("http://authserver.szu.edu.cn/authserver/index.do");
+            connection1=(HttpURLConnection)url.openConnection();
+            connection1.setRequestProperty("Cookie","CASTGC="+cookies.get("CASTGC")+"; route="+cookies.get("route")+"; JSESSIONID_auth="+cookies.get("JSESSIONID_auth")+"; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=zh_CN");
+            connection1.setRequestMethod("GET");
+            connection1.setRequestProperty("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+            connection1.setRequestProperty("Accept-Encoding","deflate");
+            connection1.setRequestProperty("Accept-Language","zh-CN,zh;q=0.9,zh-TW;q=0.8");
+            connection1.setRequestProperty("Connection","keep-alive");
+            connection1.setRequestProperty("Host","authserver.szu.edu.cn");
+            connection1.setRequestProperty("Upgrade-Insecure-Requests","1");
+            connection1.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+            connection1.setRequestProperty("Cache-Control","max-age=0");
+            connection1.connect();
+            if(connection1.getResponseCode()==302){
+                Log.d("hhh","OK5");
+            }
+            responseHeaderMap = connection1.getHeaderFields();
+            size = responseHeaderMap.size();
+            sbResponseHeader = new StringBuilder();
+            for(int i = 0; i < size; i++){
+                String responseHeaderKey = connection1.getHeaderFieldKey(i);
+                String responseHeaderValue = connection1.getHeaderField(i);
+                sbResponseHeader.append(responseHeaderKey);
+                sbResponseHeader.append(":");
+                sbResponseHeader.append(responseHeaderValue);
+                sbResponseHeader.append("\n");
+            }
+            Log.d("hhh",sbResponseHeader.toString());
+            connection1.disconnect();
 
+            //第六次请求
+            url=new URL("https://authserver.szu.edu.cn/authserver/index.do");
+            connection=(HttpsURLConnection)url.openConnection();
+            connection.setRequestProperty("Cookie","CASTGC="+cookies.get("CASTGC")+"; route="+cookies.get("route")+"; JSESSIONID_auth="+cookies.get("JSESSIONID_auth")+"; org.springframework.web.servlet.i18n.CookieLocaleResolver.LOCALE=zh_CN; insert_cookie="+cookies.get("insert_cookie"));
+            connection.setRequestMethod("GET");
+            connection.setRequestProperty("Accept","text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8");
+            connection.setRequestProperty("Accept-Encoding","deflate, br");
+            connection.setRequestProperty("Accept-Language","zh-CN,zh;q=0.9,zh-TW;q=0.8");
+            connection.setRequestProperty("Connection","keep-alive");
+            connection.setRequestProperty("Host","authserver.szu.edu.cn");
+            connection.setRequestProperty("Upgrade-Insecure-Requests","1");
+            connection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 10.0; WOW64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
+            connection.setRequestProperty("Cache-Control","max-age=0");
+            connection.connect();
+            if(connection.getResponseCode()==200){
+                Log.d("hhh","OK6");
+            }
+            responseHeaderMap = connection.getHeaderFields();
+            size = responseHeaderMap.size();
+            sbResponseHeader = new StringBuilder();
+            for(int i = 0; i < size; i++){
+                String responseHeaderKey = connection.getHeaderFieldKey(i);
+                String responseHeaderValue = connection.getHeaderField(i);
+                sbResponseHeader.append(responseHeaderKey);
+                sbResponseHeader.append(":");
+                sbResponseHeader.append(responseHeaderValue);
+                sbResponseHeader.append("\n");
+            }
+            Log.d("hhh",sbResponseHeader.toString());
+            connection.disconnect();
 
-
-
-
-
+            inputStream =new InputStreamReader(connection.getInputStream(),"UTF-8");
+            reader=new BufferedReader(inputStream);
+            stringBuffer=new StringBuffer("");
+            while ((lines=reader.readLine())!=null){
+                lines=new String(lines.getBytes(),"utf-8");
+                Log.d("hhh",lines);
+                stringBuffer.append(lines);
+            }
+            reader.close();
 
         }catch (Exception e){
             e.printStackTrace();
