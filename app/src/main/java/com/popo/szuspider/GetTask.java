@@ -19,7 +19,18 @@ import javax.net.ssl.HttpsURLConnection;
  */
 
 public class GetTask extends AsyncTask<Void,Void,Void>{
+    private String userName;
+    private String psword;
     StringBuffer stringBuffer=null;
+    private GetTaskListener mGetTaskListener;
+
+    public GetTask(GetTaskListener getTaskListener,String un,String psw) {
+        super();
+        mGetTaskListener=getTaskListener;
+        userName=un;
+        psword=psw;
+    }
+
     @Override
     protected Void doInBackground(Void... voids) {
         Map<String,String> cookies=new HashMap<>();
@@ -70,12 +81,9 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
             int end=stringBuffer.toString().indexOf("\"",start);
             String lt=stringBuffer.toString().substring(start,end);
             Log.d("hhh",lt);
-            String dllt="userNamePasswordLogin";
             start=stringBuffer.indexOf("execution\" value=\"")+18;
             end=stringBuffer.indexOf("\"",start);
             String execution=stringBuffer.substring(start,end);
-            String _eventId="submit";
-            String rmShown="1";
             start=sbResponseHeader.indexOf("JSESSIONID_auth=")+16;
             end=sbResponseHeader.indexOf(";",start);
             String JSESSIONID_auth=sbResponseHeader.substring(start,end);
@@ -103,7 +111,7 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
             connection.setRequestProperty("Referer","https://authserver.szu.edu.cn/authserver/login");
             connection.setRequestProperty("User-Agent","Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/65.0.3325.181 Safari/537.36");
             OutputStreamWriter out = new OutputStreamWriter(connection.getOutputStream());
-            out.write("username=180403&password=54336qaz55&lt="+lt+"&dllt=userNamePasswordLogin&execution="+execution+"&_eventId=submit&rmShown=1");
+            out.write("username="+userName+"&password="+psword+"&lt="+lt+"&dllt=userNamePasswordLogin&execution="+execution+"&_eventId=submit&rmShown=1");
             out.flush();
             out.close();
             connection.connect();
@@ -283,6 +291,6 @@ public class GetTask extends AsyncTask<Void,Void,Void>{
 
     @Override
     protected void onPostExecute(Void aVoid) {
-
+        mGetTaskListener.onFinished(stringBuffer.toString());
     }
 }
